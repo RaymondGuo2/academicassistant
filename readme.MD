@@ -51,3 +51,7 @@ Then you can:
 - Type questions
 - Upload an image or chart and ask “Explain this”
 - Speak into mic for quick queries
+
+## High-Level Architecture
+
+![Image Failed to Load](/Users/raymondguo/Desktop/ComputerDSProjects/llmApps/researchfinder/images/architecture.png)
