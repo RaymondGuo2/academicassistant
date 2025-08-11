@@ -54,4 +54,4 @@ Then you can:
 
 ## High-Level Architecture
 
-![Image Failed to Load](/Users/raymondguo/Desktop/ComputerDSProjects/llmApps/researchfinder/images/architecture.png)
+![Image Failed to Load](images/architecture.png)
