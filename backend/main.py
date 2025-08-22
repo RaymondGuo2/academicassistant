@@ -1,5 +1,8 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
+from database import get_db_connection
+import db_queries
 from pydantic import BaseModel
 import uuid
 import shutil
@@ -7,6 +10,7 @@ import os
 
 app = FastAPI()
 
+# Establish CORS credentials
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -17,6 +21,9 @@ app.add_middleware(
 
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+# Create database
+db_queries.create_table()
 
 class UploadResponse(BaseModel):
     doc_id:str
@@ -30,6 +37,10 @@ async def upload_file(file: UploadFile = File(...)):
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    # TODO: Save {doc_id, status: "uploaded"} to Postgres
+    # Save {doc_id, status: "uploaded"} to Postgres
+    db_queries.insert_research(doc_id, "uploaded", file_path)
 
     return {"doc_id": doc_id, "status": "uploaded"}
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
