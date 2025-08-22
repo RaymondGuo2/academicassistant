@@ -29,6 +29,7 @@ class UploadResponse(BaseModel):
     doc_id:str
     status:str
 
+# Endpoint to upload documents
 @app.post("/upload", response_model=UploadResponse)
 async def upload_file(file: UploadFile = File(...)):
     doc_id = str(uuid.uuid4())
@@ -41,6 +42,12 @@ async def upload_file(file: UploadFile = File(...)):
     db_queries.insert_research(doc_id, "uploaded", file_path)
 
     return {"doc_id": doc_id, "status": "uploaded"}
+
+# Endpoint to fetch documents and their related data
+@app.get("/documents")
+async def get_documents():
+    documents = db_queries.get_all_research()
+    return {"documents": documents}
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

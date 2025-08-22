@@ -20,13 +20,9 @@ def insert_research(doc_id, status, filepath):
             (doc_id, status, filepath)
         )
         print(f"Inserted research record with doc_id: {doc_id}")
-
-def get_research_by_id(doc_id):
-    with get_db_connection() as cur:
-        cur.execute("SELECT * FROM research WHERE doc_id = %s;", (doc_id,))
-        return cur.fetchone()
     
-def get_research():
+def get_all_research():
     with get_db_connection() as cur:
-        cur.execute("SELECT * FROM research;")
-        return cur.fetchall()
+        cur.execute("SELECT doc_id, status, filepath FROM research ORDER BY id DESC;")
+        rows = cur.fetchall()
+        return [{"doc_id": r[0], "status": r[1], "file_path": r[2]} for r in rows]
