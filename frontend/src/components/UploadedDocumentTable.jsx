@@ -23,6 +23,8 @@ export default function UploadedDocumentTable() {
 
     useEffect(() => {
         fetchDocuments();
+        const interval = setInterval(fetchDocuments, 500);
+        return () => clearInterval(interval);
     }, []);
 
     return(
