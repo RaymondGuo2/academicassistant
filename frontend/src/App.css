@@ -43,3 +43,24 @@
   padding: 20px;
   font-family: Arial, sans-serif;
 }
+
+h3 {
+  margin-bottom: 10px;
+}
+
+/* Optional: table styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+table, th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+th {
+  background-color: #f4f4f4;
+  text-align: left;
+}

@@ -18,7 +18,7 @@ function Home({ onFileSelect }) {
       <br />
 
       <h3>Uploaded Documents</h3>
-      <UploadedDocumentTable />
+      <UploadedDocumentTable/>
     </div>
   );
 }

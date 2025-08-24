@@ -27,21 +27,40 @@ export default function UploadedDocumentTable() {
         return () => clearInterval(interval);
     }, []);
 
+    function handleDelete(docId) {
+    fetch(`http://localhost:8000/documents/${docId}`, {
+        method: "DELETE",
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Delete failed");
+            }
+            // Refetch or update state
+            setDocuments((prevDocs) => prevDocs.filter((doc) => doc.doc_id !== docId));
+        })
+        .catch((err) => console.error(err));
+    }
+
+
     return(
         <table>
             <thead>
                 <tr>
                     <th>Document ID</th>
+                    <th>File Name</th>
                     <th>Status</th>
-                    <th>File Path</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {documents.map((doc) => (
                     <tr key={doc.id}>
                         <td>{doc.doc_id}</td>
+                        <td>{doc.file_name}</td>
                         <td>{doc.status}</td>
-                        <td>{doc.filepath}</td>
+                        <td>
+                            <button onClick={() => handleDelete(doc.doc_id)}>Delete</button>
+                        </td>
                     </tr>
                 ))}
             </tbody>

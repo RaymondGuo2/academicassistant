@@ -39,7 +39,7 @@ async def upload_file(file: UploadFile = File(...)):
         shutil.copyfileobj(file.file, buffer)
 
     # Save {doc_id, status: "uploaded"} to Postgres
-    db_queries.insert_research(doc_id, "uploaded", file_path)
+    db_queries.insert_research(doc_id, file.filename, "uploaded", file_path)
 
     return {"doc_id": doc_id, "status": "uploaded"}
 
@@ -48,6 +48,12 @@ async def upload_file(file: UploadFile = File(...)):
 async def get_documents():
     documents = db_queries.get_all_research()
     return {"documents": documents}
+
+# Endpoint to delete specific documents and their related data
+@app.delete("/documents/{doc_id}")
+async def delete_document(doc_id: str):
+    db_queries.delete_research(doc_id)
+    return {"status": "deleted"}
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
