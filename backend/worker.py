@@ -1,6 +1,7 @@
 import time
 import db_queries
 from processors import extract_text_and_metadata
+import chunking
 
 def worker_loop():
     print("Working script")
@@ -9,9 +10,25 @@ def worker_loop():
         for doc in docs:
             print(f"Processing document {doc[0]}...")
             try:
+                # Phase 2: extract text and metadata
                 text, metadata = extract_text_and_metadata(doc[3])
                 db_queries.save_processed(doc[0], text, metadata)
                 db_queries.update_status(doc[0], "processed")
+
+                # Phase 3: chunk + embed
+                chunks = chunking.chunk_text(text)
+                embeddings = chunking.get_embeddings(chunks)
+                for chunk in embeddings:
+                    db_queries.insert_chunk(
+                        doc_id=doc[0],
+                        chunk_text=chunk["chunk_text"],
+                        vector=chunk["vector"],
+                        start_offset=chunk["start"],
+                        end_offset=chunk["end"]
+                    )
+                
+                db_queries.update_status(doc[0], "indexed")
+                print(f"Document {doc[0]} processed and indexed.")
             except Exception as e:
                 print(f"Error processing document {doc[0]}: {e}")
                 db_queries.update_status(doc[0], "error")

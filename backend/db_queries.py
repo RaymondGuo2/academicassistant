@@ -27,6 +27,18 @@ def create_processed_table():
         """)
         print("Table 'processed_data' created")
 
+def create_vector_table():
+    with get_db_connection() as cur:
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS document_chunks (
+            chunk_id SERIAL PRIMARY KEY,
+            doc_id UUID REFERENCES research(doc_id) ON DELETE CASCADE,
+            chunk_text TEXT,
+            embedding VECTOR(1536)
+        );
+        """)
+        print("Table 'document_chunks' created")
+
 def insert_research(doc_id, file_name, status, filepath):
     with get_db_connection() as cur:
         cur.execute(
@@ -67,3 +79,10 @@ def get_processed_by_doc_id(doc_id):
 def update_status(doc_id, status):
     with get_db_connection() as cur:
         cur.execute("UPDATE research SET status = %s WHERE doc_id = %s;", (status, doc_id))
+
+def insert_chunk(doc_id, chunk_text, vector, start_offset, end_offset):
+    with get_db_connection() as cur:
+        cur.execute(
+            "INSERT INTO document_chunks (doc_id, chunk_text, embedding, start_offset, end_offset) VALUES (%s, %s, %s, %s, %s)",
+            (doc_id, chunk_text, vector, start_offset, end_offset)
+        )
