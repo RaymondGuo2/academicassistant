@@ -1,6 +1,8 @@
 import pdfplumber, pytesseract
 from PIL import Image
-import whisper
+from faster_whisper import WhisperModel
+
+model = WhisperModel("base")
 
 def extract_text_and_metadata(file_path):
     if file_path.lower().endswith('.pdf'):
@@ -15,6 +17,7 @@ def extract_text_and_metadata(file_path):
 def process_pdf(file_path):
     with pdfplumber.open(file_path) as pdf:
         text = "\n".join(page.extract_text() or "" for page in pdf.pages)
+        print(f"successfully extracted PDF: {file_path}")
         return clean_text(text), {"file_type": "pdf"}
     
 def process_image(file_path):
@@ -23,9 +26,9 @@ def process_image(file_path):
     return clean_text(text), {"file_type": "image"}
 
 def process_audio(file_path):
-    model = whisper.load_model("base")
-    result = model.transcribe(file_path)
-    return clean_text(result["text"]), {"file_type": "audio"}
+    segments, info = model.transcribe(file_path)
+    full_text = " ".join([segment.text for segment in segments])
+    return clean_text(full_text), {"file_type": "audio"}
 
 def clean_text(text):
     return " ".join(text.split())

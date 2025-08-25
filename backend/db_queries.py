@@ -22,8 +22,7 @@ def create_processed_table():
             id SERIAL PRIMARY KEY,
             doc_id UUID REFERENCES research(doc_id) ON DELETE CASCADE,
             text_content TEXT NOT NULL,
-            metadata JSONB,
-            processed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            metadata JSONB
         );
         """)
         print("Table 'processed_data' created")
