@@ -41,7 +41,6 @@ export default function UploadedDocumentTable() {
         .catch((err) => console.error(err));
     }
 
-
     return(
         <table>
             <thead>

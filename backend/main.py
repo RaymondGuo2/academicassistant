@@ -55,5 +55,12 @@ async def delete_document(doc_id: str):
     db_queries.delete_research(doc_id)
     return {"status": "deleted"}
 
+# Endpoint to view processed text
+@app.get("/documents/{doc_id}/processed")
+def get_processed_text(doc_id: str):
+    processed = db_queries.get_processed_by_doc_id(doc_id)
+    return processed or {"error": "Processed text not found"}
+
+
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

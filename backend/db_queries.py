@@ -1,3 +1,4 @@
+import json
 from database import get_db_connection
 
 # Create the table
@@ -13,6 +14,19 @@ def create_table():
         );
         """)
         print("Table 'research' created")
+
+def create_processed_table():
+    with get_db_connection() as cur:
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS processed_data (
+            id SERIAL PRIMARY KEY,
+            doc_id UUID REFERENCES research(doc_id) ON DELETE CASCADE,
+            text_content TEXT NOT NULL,
+            metadata JSONB,
+            processed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        """)
+        print("Table 'processed_data' created")
 
 def insert_research(doc_id, file_name, status, filepath):
     with get_db_connection() as cur:
@@ -32,3 +46,21 @@ def delete_research(doc_id):
     with get_db_connection() as cur:
         cur.execute("DELETE FROM research WHERE doc_id = %s", (doc_id,))
         print(f"Deleted research record with doc_id: {doc_id}")
+
+def get_documents_by_status(status):
+    with get_db_connection() as cur:
+        cur.execute("SELECT doc_id, file_name, status, filepath FROM research WHERE status = %s;", (status,))
+        return cur.fetchall()
+    
+def save_processed(doc_id, text, metadata):
+    with get_db_connection() as cur:
+        cur.execute(
+            "INSERT INTO processed_data (doc_id, text_content, metadata) VALUES (%s, %s, %s)",
+            (doc_id, text, json.dumps(metadata))
+        )
+        print(f"Saved processed data for doc_id: {doc_id}")
+
+def get_processed_by_doc_id(doc_id):
+    with get_db_connection() as cur:
+        cur.execute("SELECT doc_id, filename, text_content, metadata FROM processed_data WHERE doc_id = %s;", (doc_id,))
+        return cur.fetchall()
