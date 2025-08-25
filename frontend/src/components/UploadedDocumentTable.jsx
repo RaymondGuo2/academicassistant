@@ -41,6 +41,22 @@ export default function UploadedDocumentTable() {
         .catch((err) => console.error(err));
     }
 
+    function handleProcessed(docId) {
+        fetch(`http://localhost:8000/documents/${docId}/processed`, {
+            method: "GET",
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Fetch failed");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                console.log("Processed data:", data);
+            })
+            .catch((err) => console.error(err));
+    }
+
     return(
         <table>
             <thead>

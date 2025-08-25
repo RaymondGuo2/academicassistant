@@ -62,5 +62,9 @@ def save_processed(doc_id, text, metadata):
 
 def get_processed_by_doc_id(doc_id):
     with get_db_connection() as cur:
-        cur.execute("SELECT doc_id, filename, text_content, metadata FROM processed_data WHERE doc_id = %s;", (doc_id,))
+        cur.execute("SELECT doc_id, text_content, metadata FROM processed_data WHERE doc_id = %s;", (doc_id,))
         return cur.fetchall()
+
+def update_status(doc_id, status):
+    with get_db_connection() as cur:
+        cur.execute("UPDATE research SET status = %s WHERE doc_id = %s;", (status, doc_id))

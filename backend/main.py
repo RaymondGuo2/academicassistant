@@ -24,6 +24,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # Create database
 db_queries.create_table()
+db_queries.create_processed_table()
 
 class UploadResponse(BaseModel):
     doc_id:str
