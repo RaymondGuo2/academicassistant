@@ -80,9 +80,10 @@ def update_status(doc_id, status):
     with get_db_connection() as cur:
         cur.execute("UPDATE research SET status = %s WHERE doc_id = %s;", (status, doc_id))
 
-def insert_chunk(doc_id, chunk_text, vector, start_offset, end_offset):
+def insert_chunk(doc_id, chunk_text, vector):
     with get_db_connection() as cur:
         cur.execute(
-            "INSERT INTO document_chunks (doc_id, chunk_text, embedding, start_offset, end_offset) VALUES (%s, %s, %s, %s, %s)",
-            (doc_id, chunk_text, vector, start_offset, end_offset)
+            "INSERT INTO document_chunks (doc_id, chunk_text, embedding) VALUES (%s, %s, %s)",
+            (doc_id, chunk_text, vector)
         )
+

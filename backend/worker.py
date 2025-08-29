@@ -17,14 +17,14 @@ def worker_loop():
 
                 # Phase 3: chunk + embed
                 chunks = chunking.chunk_text(text)
+                print("Passed chunking")
                 embeddings = chunking.get_embeddings(chunks)
+                print("Passed embedding")
                 for chunk in embeddings:
                     db_queries.insert_chunk(
                         doc_id=doc[0],
                         chunk_text=chunk["chunk_text"],
-                        vector=chunk["vector"],
-                        start_offset=chunk["start"],
-                        end_offset=chunk["end"]
+                        vector=chunk["vector"]
                     )
                 
                 db_queries.update_status(doc[0], "indexed")
