@@ -8,6 +8,7 @@ import uuid
 import shutil
 import os
 import chunking
+import promptandquery as promptandquery
 
 app = FastAPI()
 
@@ -72,7 +73,11 @@ class QueryRequest(BaseModel):
 async def post_query(req: QueryRequest):
     response = chunking.process_query(req.query)
     get_similar_k = db_queries.query_similar_chunks(response, k=db_queries.K)
-    return {"response": response, "similar_chunks": get_similar_k}
+
+    # Call GPT
+    prompt = promptandquery.create_prompt(req.query, get_similar_k)
+    answer = promptandquery.get_answer_from_openai(prompt)
+    return {"response": response, "similar_chunks": get_similar_k, "answer": answer}
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
