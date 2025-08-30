@@ -18,13 +18,15 @@ function Home({ onFileSelect }) {
       <br />
       <br />
 
-      <h3>Please type your query below:</h3>
-      <Query />
-      <br />
-      <br />
-
       <h3>Uploaded Documents</h3>
       <UploadedDocumentTable/>
+
+      <br />
+      <br />
+     
+      <h3>Please type your query below:</h3>
+      <Query />
+
     </div>
   );
 }
