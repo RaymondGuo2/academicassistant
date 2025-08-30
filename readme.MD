@@ -2,6 +2,8 @@
 
 A workspace where you can dump all your messy notes, PDFs, links, and ideas, and the LLM becomes your research partner — remembering everything, connecting dots, and generating insights automatically.
 
+### Current Status: Working Local PoC Developed (Phase 1-5)
+
 ## Core Concept
 
 You throw in:
