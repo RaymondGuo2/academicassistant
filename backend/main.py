@@ -63,6 +63,13 @@ def get_processed_text(doc_id: str):
     processed = db_queries.get_processed_by_doc_id(doc_id)
     return processed or {"error": "Processed text not found"}
 
+class QueryRequest(BaseModel):
+    query: str
+
+# Endpoint to post the query
+@app.post(("/query"))
+async def post_query(req: QueryRequest):
+    return {"response": f"Received query: {req.query}"}
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

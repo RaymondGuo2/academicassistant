@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import FileUploadButton  from "./components/FileUploadButton";
 import UploadedDocumentTable from "./components/UploadedDocumentTable";
 import "./App.css";
-import Database from "./pages/Database";  
+import Database from "./pages/Database"; 
+import Query from "./components/Query";
 
 function Home({ onFileSelect }) {
   return (
@@ -14,6 +15,11 @@ function Home({ onFileSelect }) {
       <h3>Please upload your files below: </h3>
       <FileUploadButton onFileSelect={onFileSelect} />
 
+      <br />
+      <br />
+
+      <h3>Please type your query below:</h3>
+      <Query />
       <br />
       <br />
 
