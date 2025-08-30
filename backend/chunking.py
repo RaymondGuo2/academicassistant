@@ -39,3 +39,10 @@ def get_embeddings(text_chunks):
             "end": chunk["end"]
         })
     return embeddings
+
+def process_query(query):
+    response = client.embeddings.create(
+        model="text-embedding-3-small",
+        input=query
+    )
+    return response.data[0].embedding if response.data else []

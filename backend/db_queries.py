@@ -1,6 +1,9 @@
 import json
 from database import get_db_connection
 
+# Global k for top-k most similar chunks
+K = 5
+
 # Create the table
 def create_table():
     with get_db_connection() as cur:
@@ -87,3 +90,15 @@ def insert_chunk(doc_id, chunk_text, vector):
             (doc_id, chunk_text, vector)
         )
 
+def query_similar_chunks(query_embedding, k=K):
+    with get_db_connection() as cur:
+        cur.execute(
+            "SELECT chunk_id, chunk_text, embedding <-> %s::vector AS distance "
+            "FROM document_chunks "
+            "ORDER BY distance "
+            "LIMIT %s;",
+            (query_embedding, k)
+        )
+        results = cur.fetchall()
+        print(results)
+        return [{"id": r[0], "chunk_text": r[1], "distance": r[2]} for r in results]

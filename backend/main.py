@@ -7,6 +7,7 @@ from pydantic import BaseModel
 import uuid
 import shutil
 import os
+import chunking
 
 app = FastAPI()
 
@@ -69,7 +70,9 @@ class QueryRequest(BaseModel):
 # Endpoint to post the query
 @app.post(("/query"))
 async def post_query(req: QueryRequest):
-    return {"response": f"Received query: {req.query}"}
+    response = chunking.process_query(req.query)
+    get_similar_k = db_queries.query_similar_chunks(response, k=db_queries.K)
+    return {"response": response, "similar_chunks": get_similar_k}
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
